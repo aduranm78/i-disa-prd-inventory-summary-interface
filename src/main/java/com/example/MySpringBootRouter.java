@@ -56,6 +56,7 @@ public class MySpringBootRouter extends RouteBuilder {
         	.to("log:DEBUG?showBody=true&showHeaders=true")
         	.removeHeaders("*")
         	.setHeader("CamelHttpMethod", constant("POST"))
+			.setHeader("Connection", constant("keep-alive"))
         	.setHeader(Exchange.HTTP_URI, constant(erpUri))
         	.process(new Processor() {
                 @Override
@@ -70,5 +71,4 @@ public class MySpringBootRouter extends RouteBuilder {
         	.to("log:DEBUG?showBody=true&showHeaders=true")
         	.to("stream:out");
     }
-
 }
