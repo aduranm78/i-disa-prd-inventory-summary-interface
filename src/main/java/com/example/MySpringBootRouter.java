@@ -35,8 +35,8 @@ public class MySpringBootRouter extends RouteBuilder {
     		});
     		// .continued(true); // Para continuar con la ruta
 
-		//from("timer:poll?period={{timer.period}}").routeId("{{route.id}}")
-    	from("timer:poll?period={{timer.period}}&delay={{timer.delay}}").routeId("{{route.id}}")
+		from("timer:poll?period={{timer.period}}").routeId("{{route.id}}")
+    	//from("timer:poll?period={{timer.period}}&delay={{timer.delay}}").routeId("{{route.id}}")
     		.process(exchange -> {
     			String wmsUri = env.getProperty("wms.uri");
 				System.out.println("URL WMS: " + wmsUri);
