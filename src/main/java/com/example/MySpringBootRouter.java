@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import java.net.URLEncoder;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 
