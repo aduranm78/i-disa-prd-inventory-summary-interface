@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.apache.camel.Message;
 
 /**
  * A simple Camel route that triggers from a timer and calls a bean and prints to system out.
@@ -47,6 +48,7 @@ public class MySpringBootRouter extends RouteBuilder {
     			String encodedDateRange = URLEncoder.encode(dateRange, "UTF-8");
     	    	exchange.getMessage().setHeader(Exchange.HTTP_QUERY, "arehouse=28002&between=" + encodedDateRange);*/
     	    	exchange.getMessage().setHeader(Exchange.HTTP_URI, wmsUri);
+				System.out.println("******** Inicio de la Peticion WMS ********");
     		})
     		.to("log:DEBUG?showBody=true&showHeaders=true")
     		//.to("https://test?throwExceptionOnFailure=false") // Para no lanzar errores
@@ -61,12 +63,25 @@ public class MySpringBootRouter extends RouteBuilder {
                 public void process(Exchange exchange) throws Exception {
                 	String authHeader = OAuthSign.getAuthHeader(erpUri);
                     exchange.getMessage().setHeader("Authorization", authHeader);
+					System.out.println("******** Inicio de la Peticion Netsuite ********");
                 }
         	})
         	.setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
         	.to("log:DEBUG?showBody=true&showHeaders=true")
         	.to("https://netsuite")
-        	.to("log:DEBUG?showBody=true&showHeaders=true")
-        	.to("stream:out");
+        	//.to("log:DEBUG?showBody=true&showHeaders=true")
+        	//.to("stream:out");
+			.streamCaching()
+			//.log(LoggingLevel.INFO, "${in.headers.CamelFileName}")
+			//.to("log:DEBUG?showBody=true")
+			.process(new Processor() {
+				@Override
+				public void process(Exchange exchange) throws Exception {
+				Message message = exchange.getMessage();
+				String body = message.getBody(String.class);
+				System.out.println("Response:"+ body);
+				System.out.println("********Fin de la Peticion********");
+				}
+			})
     }
 }
