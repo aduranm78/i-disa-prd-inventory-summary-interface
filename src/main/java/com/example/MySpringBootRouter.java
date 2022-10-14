@@ -82,6 +82,6 @@ public class MySpringBootRouter extends RouteBuilder {
 				System.out.println("Response:"+ body);
 				System.out.println("********Fin de la Peticion********");
 				}
-			})
+			});
     }
 }
